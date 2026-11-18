@@ -1,0 +1,36 @@
+name: Format or codec request
+description: A picture, video or audio format that is missing or does not work
+labels: ["formats"]
+body:
+  - type: input
+    id: ext
+    attributes:
+      label: File extension and format name
+      placeholder: ".mxf (MXF / DNxHD)"
+    validations:
+      required: true
+  - type: dropdown
+    id: problem
+    attributes:
+      label: What is wrong?
+      options:
+        - Not shown in the library at all
+        - Shown but no thumbnail
+        - Shown but will not open or play
+        - Plays with problems (no sound, wrong colours, stutters)
+    validations:
+      required: true
+  - type: textarea
+    id: info
+    attributes:
+      label: Output of `heliograph info FILE`
+      description: Check it for personal paths first.
+      render: text
+    validations:
+      required: true
+  - type: input
+    id: tools
+    attributes:
+      label: Output of `heliograph formats` (the "Tools" line)
+    validations:
+      required: false

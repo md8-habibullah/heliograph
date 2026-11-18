@@ -1,0 +1,57 @@
+name: Bug report
+description: Something does not work, hangs, or uses too much CPU or memory
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting. **Please remove personal paths, names and e-mail addresses** from anything you paste. For security problems do not use this form: see SECURITY.md.
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened, and what did you expect?
+      placeholder: "Opening a folder with about 20,000 files, scrolling to the end shows empty tiles..."
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+    validations:
+      required: false
+  - type: input
+    id: version
+    attributes:
+      label: Heliograph version
+      description: Output of `heliograph --version`
+    validations:
+      required: true
+  - type: textarea
+    id: doctor
+    attributes:
+      label: Output of `heliograph doctor`
+      render: text
+    validations:
+      required: true
+  - type: input
+    id: system
+    attributes:
+      label: Distribution, desktop and browser
+      placeholder: "Arch Linux, Hyprland, Chromium 156"
+    validations:
+      required: true
+  - type: textarea
+    id: media
+    attributes:
+      label: For a file that will not show or play
+      description: Output of `heliograph info FILE` (check it for personal paths first) and, if you can share it, how large the file is and where it came from.
+      render: text
+    validations:
+      required: false
+  - type: textarea
+    id: size
+    attributes:
+      label: Library size
+      description: Roughly how many files, and on what kind of disk (SSD, hard disk, network share)? `heliograph monitor --once` output helps for slowness.
+    validations:
+      required: false

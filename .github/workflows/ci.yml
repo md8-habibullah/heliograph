@@ -1,0 +1,67 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: ${{ matrix.python-version }}
+          allow-prereleases: true
+      - name: System tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends ffmpeg imagemagick
+      - name: Pillow (optional runtime dependency, used by some tests)
+        run: python -m pip install Pillow
+      - name: Test suite
+        run: python -X dev -m unittest discover -s tests -t tests -v
+
+  no-optional-tools:
+    # Heliograph must keep working (and its tests must keep passing or skipping) without FFmpeg and Pillow.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - run: python -X dev -m unittest discover -s tests -t tests
+
+  web:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+      - name: Syntax-check the interface scripts
+        run: for f in src/heliograph/web/*.js; do node --check "$f"; done
+
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Build and install the package in a clean environment
+        run: |
+          python -m pip install build
+          python -m build
+          python -m venv /tmp/venv
+          /tmp/venv/bin/pip install dist/*.whl
+          /tmp/venv/bin/heliograph --version
+          /tmp/venv/bin/python -c "import heliograph, pathlib; p = pathlib.Path(heliograph.__file__).parent / 'web' / 'index.html'; assert p.is_file(), p"

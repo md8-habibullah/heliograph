@@ -1,0 +1,59 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "heliograph"
+version = "0.1.0"
+description = "A fast, private media library and player for Linux. Millions of pictures, videos and music, loaded only as you scroll."
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+requires-python = ">=3.10"
+authors = [{ name = "MD. Habibullah Sharif" }]
+keywords = ["media-library", "photo-viewer", "video-player", "music-player", "ffmpeg", "sqlite", "linux", "mcp", "gallery"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Environment :: X11 Applications",
+  "Environment :: Web Environment",
+  "Intended Audience :: End Users/Desktop",
+  "Operating System :: POSIX :: Linux",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Topic :: Multimedia :: Graphics :: Viewers",
+  "Topic :: Multimedia :: Sound/Audio :: Players",
+  "Topic :: Multimedia :: Video :: Display",
+]
+# No required Python packages: the standard library does the work.
+# FFmpeg and a Chromium-based browser are needed at run time (see README).
+dependencies = []
+
+[project.optional-dependencies]
+# Faster picture headers and thumbnails. Without it Heliograph falls back to ImageMagick / FFmpeg.
+image = ["Pillow>=10"]
+
+[project.urls]
+Homepage = "https://github.com/md8-habibullah/heliograph"
+Source = "https://github.com/md8-habibullah/heliograph"
+Issues = "https://github.com/md8-habibullah/heliograph/issues"
+Changelog = "https://github.com/md8-habibullah/heliograph/blob/main/CHANGELOG.md"
+
+[project.scripts]
+heliograph = "heliograph.cli:main"
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+heliograph = ["web/*"]
+
+[tool.ruff]
+line-length = 130
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "B", "UP", "SIM"]
+ignore = ["E501", "E701", "E702", "SIM105", "SIM108", "UP032", "B904"]

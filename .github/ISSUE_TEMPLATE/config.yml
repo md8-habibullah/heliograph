@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security problem
+    url: https://github.com/md8-habibullah/heliograph/security/advisories/new
+    about: Please report vulnerabilities privately, not as a public issue.
+  - name: Questions and ideas
+    url: https://github.com/md8-habibullah/heliograph/discussions
+    about: Ask questions or share how you use Heliograph.

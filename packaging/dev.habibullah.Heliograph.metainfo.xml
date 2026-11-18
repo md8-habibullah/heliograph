@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>dev.habibullah.Heliograph</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>MIT</project_license>
+  <name>Heliograph</name>
+  <summary>A fast, private library and player for your pictures, videos and music</summary>
+  <developer id="dev.habibullah">
+    <name>MD. Habibullah Sharif</name>
+  </developer>
+  <description>
+    <p>
+      Heliograph browses and plays very large media collections without slowing your computer down. It loads only
+      what is on your screen, reads details in the background only when the PC is calm, and keeps everything in a
+      local database on your own machine.
+    </p>
+    <ul>
+      <li>Open any folder or file, or keep folders in a library with a timeline, favourites and search</li>
+      <li>Plays formats browsers cannot, such as MOV, MKV, HEVC and ProRes, using hardware acceleration when available</li>
+      <li>Recognises hundreds of picture, video and audio formats, including camera RAW and HEIC</li>
+      <li>Converts pictures, video and audio with FFmpeg, and never changes your originals</li>
+      <li>Private: nothing leaves your computer, and there is no telemetry</li>
+      <li>Can be used by AI assistants through a built-in, read-only MCP server</li>
+    </ul>
+  </description>
+  <launchable type="desktop-id">dev.habibullah.Heliograph.desktop</launchable>
+  <provides>
+    <binary>heliograph</binary>
+  </provides>
+  <url type="homepage">https://github.com/md8-habibullah/heliograph</url>
+  <url type="bugtracker">https://github.com/md8-habibullah/heliograph/issues</url>
+  <url type="vcs-browser">https://github.com/md8-habibullah/heliograph</url>
+  <screenshots>
+    <screenshot type="default">
+      <caption>Pictures and videos grouped by folder</caption>
+      <image>https://raw.githubusercontent.com/md8-habibullah/heliograph/main/docs/images/library.webp</image>
+    </screenshot>
+    <screenshot>
+      <caption>The built-in video player with details</caption>
+      <image>https://raw.githubusercontent.com/md8-habibullah/heliograph/main/docs/images/player.webp</image>
+    </screenshot>
+  </screenshots>
+  <categories>
+    <category>AudioVideo</category>
+    <category>Player</category>
+    <category>Graphics</category>
+    <category>Viewer</category>
+  </categories>
+  <keywords>
+    <keyword>media</keyword>
+    <keyword>photos</keyword>
+    <keyword>video</keyword>
+    <keyword>music</keyword>
+    <keyword>gallery</keyword>
+    <keyword>ffmpeg</keyword>
+  </keywords>
+  <recommends>
+    <control>keyboard</control>
+    <control>pointing</control>
+  </recommends>
+  <content_rating type="oars-1.1"/>
+  <releases>
+    <release version="0.1.0" date="2026-11-18"/>
+  </releases>
+</component>

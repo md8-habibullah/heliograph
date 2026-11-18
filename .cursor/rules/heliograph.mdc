@@ -1,0 +1,13 @@
+---
+description: Heliograph project rules
+alwaysApply: true
+---
+
+Read `AGENTS.md` at the repository root before changing code; it is the single source of rules. The map of the code is `docs/ai/ARCHITECTURE.md`.
+
+- Standard library only at run time. No network calls, no telemetry, no CDN resources.
+- Web interface: ES modules, no framework, never `innerHTML`/`eval`; build nodes with `h()` from `core.js`.
+- Never build a shell string; FFmpeg gets argument lists, absolute paths, whitelisted presets (`convert.PRESETS`).
+- Files are served by database id only. Schema changes are new migrations in `db.py`.
+- Test with `python3 -X dev -m unittest discover -s tests -t tests`, always in a scratch `HELIOGRAPH_HOME`.
+- Do not commit or push unless asked.

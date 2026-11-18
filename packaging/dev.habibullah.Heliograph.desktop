@@ -1,0 +1,15 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=Heliograph
+GenericName=Media Library and Player
+Comment=Fast, private library and player for your pictures, videos and music
+Exec=heliograph %F
+TryExec=heliograph
+Icon=dev.habibullah.Heliograph
+Terminal=false
+Categories=AudioVideo;Video;Audio;Player;
+MimeType=inode/directory;image/jpeg;image/png;image/gif;image/webp;image/avif;image/bmp;image/tiff;image/heic;image/heif;image/jxl;image/svg+xml;image/x-icon;image/x-tga;image/jp2;image/x-exr;image/vnd.adobe.photoshop;image/x-canon-cr2;image/x-canon-cr3;image/x-nikon-nef;image/x-sony-arw;image/x-adobe-dng;image/x-olympus-orf;image/x-fuji-raf;image/x-panasonic-rw2;image/x-pentax-pef;video/mp4;video/quicktime;video/x-matroska;video/webm;video/x-msvideo;video/x-ms-wmv;video/x-flv;video/mpeg;video/mp2t;video/3gpp;video/3gpp2;video/ogg;video/x-ogm+ogg;video/x-m4v;video/dv;video/vnd.rn-realvideo;application/mxf;audio/mpeg;audio/flac;audio/x-flac;audio/mp4;audio/x-m4a;audio/aac;audio/ogg;audio/x-vorbis+ogg;audio/opus;audio/x-opus+ogg;audio/wav;audio/x-wav;audio/webm;audio/x-matroska;audio/x-ms-wma;audio/x-aiff;audio/x-ape;audio/x-wavpack;audio/ac3;audio/amr;audio/basic;audio/x-musepack;
+StartupNotify=false
+StartupWMClass=dev.habibullah.Heliograph
+Keywords=media;library;photos;pictures;gallery;video;music;audio;player;viewer;convert;ffmpeg;

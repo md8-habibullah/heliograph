@@ -1,0 +1,24 @@
+name: Feature request
+description: An idea that would make Heliograph better
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What are you trying to do?
+      description: Describe the problem first; a solution can come after.
+    validations:
+      required: true
+  - type: textarea
+    id: idea
+    attributes:
+      label: What would you like to happen?
+    validations:
+      required: false
+  - type: textarea
+    id: perf
+    attributes:
+      label: Would it need work for files that are not on screen?
+      description: Heliograph does work only for what is visible. If your idea needs more, say how it could stay light.
+    validations:
+      required: false

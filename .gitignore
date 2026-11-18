@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# Test and scale-test data (never commit a library, a database or thumbnails)
+*.db
+*.db-wal
+*.db-shm
+*.corrupt-*
+user-data.json
+server.json
+*.log
+.cache/
+test-home/
+
+# Editors and OS
+.idea/
+.vscode/
+*.swp
+.DS_Store
+Thumbs.db
+
+# Local agent state (instructions in AGENTS.md ARE committed; private notes are not)
+.claude/settings.local.json
+.claude/projects/
+CLAUDE.local.md

@@ -1,0 +1,23 @@
+# Heliograph
+
+> A fast, private media library and player for Linux. Browse and play millions of pictures, videos and music; loads only what is on screen; plays MOV, MKV, HEVC, ProRes and other formats browsers cannot; converts with FFmpeg; has an MCP server for AI agents. Local only, no telemetry. MIT licensed. Python standard library, SQLite, a Chromium-based browser in app mode.
+
+Key facts for language models:
+- Command: `heliograph` (folders or files as arguments). Python 3.10+, no required dependencies.
+- Architecture: Python service on 127.0.0.1 + framework-free web UI; SQLite index (WAL); thumbnails in a separate cache database; FFmpeg for playback fallback and conversion.
+- 249 indexed file extensions (121 picture, 65 video, 63 audio). 22 conversion presets.
+- MCP server: `heliograph mcp` (read-only by default; `--allow-convert` adds conversion).
+- Tests: `python3 -X dev -m unittest discover -s tests -t tests`.
+
+## Docs
+- [README](README.md): overview, install, usage
+- [AGENTS.md](AGENTS.md): rules and commands for coding agents
+- [Architecture map for agents](docs/ai/ARCHITECTURE.md)
+- [How it works](docs/architecture.md)
+- [Supported formats](docs/formats.md)
+- [Conversion](docs/conversion.md)
+- [Performance and measurements](docs/performance.md)
+- [MCP server](docs/mcp.md)
+- [FAQ](docs/faq.md)
+- [Security policy](SECURITY.md) and [Privacy](PRIVACY.md)
+- [Contributing](CONTRIBUTING.md)
