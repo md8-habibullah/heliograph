@@ -1,0 +1,126 @@
+.TH HELIOGRAPH 1 "" "Heliograph" "User Commands"
+.SH NAME
+heliograph \- a fast, private media library and player
+.SH SYNOPSIS
+.B heliograph
+[\fB\-\-add\fR] [\fB\-\-tab\fR] [\fB\-\-no\-window\fR] [\fIPATH\fR ...]
+.br
+.B heliograph
+.I COMMAND
+[\fIARGUMENTS\fR]
+.SH DESCRIPTION
+.B Heliograph
+browses and plays large collections of pictures, videos and music. It loads only what is on the screen,
+keeps its index in a local SQLite database, plays formats that browsers cannot (MOV, MKV, HEVC and more)
+by repackaging or converting them with FFmpeg, and converts pictures, video and audio.
+Everything stays on this computer: it listens on 127.0.0.1 only and has no telemetry.
+.PP
+The window is a Chromium\-based browser in app mode. A small background service is started when needed
+and stops by itself after a while without use.
+.PP
+Without a command,
+.B heliograph
+opens the window. Give it a folder to browse everything inside it, or a picture, video or audio file to
+view it (the files next to it are one arrow key away). A folder is only browsed for now, unless
+.B \-\-add
+is given.
+.SH OPTIONS
+These apply when opening folders and files.
+.TP
+.B \-\-add
+Add the folders to the library instead of only opening them.
+.TP
+.B \-\-tab
+Open in the default browser instead of an app window.
+.TP
+.B \-\-no\-window
+Only start the service and index the folders.
+.TP
+.B \-\-version
+Show the version.
+.TP
+.B \-h, \-\-help
+Show help. Every command also has its own \fB\-\-help\fR.
+.SH COMMANDS
+.TP
+.B cache
+[\fBsize\fR|\fBprune\fR|\fBclear\fR]: thumbnail cache usage, pruning and clearing.
+.TP
+.B config
+[\fIkey\fR [\fIvalue\fR]] [\fB\-\-json\fR]: show or change settings. Changes apply at once.
+.TP
+.B convert
+[\fB\-\-to\fR \fIFORMAT\fR] [\fB\-\-quality\fR \fIhigh|balanced|small\fR] [\fB\-\-max\-height\fR \fIN\fR] [\fB\-\-out\fR \fIDIR\fR] \fIFILE\fR ...: convert
+pictures, videos and audio with FFmpeg. Originals are never changed or overwritten. \fB\-\-list\fR shows every preset.
+.TP
+.B default
+[\fB\-\-images\fR] [\fB\-\-videos\fR] [\fB\-\-audio\fR] [\fB\-\-folders\fR]: make Heliograph the default application for those
+types. The previous defaults are remembered; \fB\-\-restore\fR undoes the change and \fB\-\-status\fR shows the current state.
+.TP
+.B doctor
+Check that everything Heliograph needs works (Python, FFmpeg, a browser, optional tools).
+.TP
+.B formats
+What Heliograph indexes and what this machine can decode.
+.TP
+.B info
+\fIFILE\fR: show what is inside a media file and how it plays.
+.TP
+.B install
+Add Heliograph to the app menu and to "Open with" for this user. It does not change any default.
+\fB\-\-uninstall\fR removes it again. Packages already install a menu entry; run this once on Wayland to make the
+launcher match the window's class.
+.TP
+.B mcp
+Run an MCP server on standard input and output so AI assistants can search and inspect the library
+(read\-only unless \fB\-\-allow\-convert\fR is given).
+.TP
+.B monitor
+Live terminal status of the service. \fB\-\-once\fR prints one frame and exits.
+.TP
+.B rescan
+Rescan the library folders (needs the service to be running).
+.TP
+.B search
+[\fB\-\-kind\fR \fIimage|video|audio\fR] [\fB\-\-in\fR \fIFOLDER\fR] [\fB\-\-limit\fR \fIN\fR] [\fB\-\-json\fR] \fIWORDS\fR ...: search the
+library from the terminal. Read\-only; no service needed.
+.TP
+.B serve
+Run the service in the foreground.
+.TP
+.B status
+Service status; \fB\-\-json\fR for scripts.
+.TP
+.B stop
+Stop the background service.
+.TP
+.B version
+Show the version.
+.SH FILES
+.TP
+.I ~/.local/share/heliograph/
+The library database (folders, file details, favourites, settings) and a small recovery snapshot.
+.TP
+.I ~/.cache/heliograph/
+Thumbnails and previews. A cache: safe to delete.
+.TP
+.I ~/.local/state/heliograph/
+The running service's details and its log.
+.PP
+The locations follow XDG_DATA_HOME, XDG_CACHE_HOME and XDG_STATE_HOME. To remove everything Heliograph stored,
+run \fBheliograph stop\fR and delete those three folders.
+.SH ENVIRONMENT
+.TP
+.B HELIOGRAPH_BROWSER
+Command (with arguments) of the browser to use for the window instead of the first Chromium\-based browser found.
+.TP
+.B HELIOGRAPH_HOME
+Keep all data, cache and state under this folder instead of the XDG locations. Useful for trying things out.
+.SH EXIT STATUS
+0 on success, 1 when the command failed (the reason is printed on standard error).
+.SH BUGS
+Report problems at https://github.com/md8-habibullah/heliograph/issues
+.SH AUTHOR
+MD. Habibullah Sharif, https://habibullah.dev
+.SH SEE ALSO
+.BR ffmpeg (1)

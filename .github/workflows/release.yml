@@ -1,0 +1,179 @@
+name: Release
+
+# Builds the files people install (wheel, source archive, .deb, .rpm, Arch package, checksums) and attaches
+# them to the GitHub release of a version tag. See docs/packaging.md.
+#
+#   Push a tag:                  git tag -s v0.1.1 -m "Heliograph 0.1.1" && git push origin v0.1.1
+#   Rebuild for an existing tag: gh workflow run release.yml -f tag=v0.1.1
+#   Try the builds only:         gh workflow run release.yml          (nothing is published)
+# Pull requests that change the packaging also run the builds (never the publishing), so a broken recipe is
+# found before tag day.
+
+on:
+  push:
+    tags: ["v*"]
+  pull_request:
+    paths: ["packaging/**", ".github/workflows/release.yml"]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Existing tag to build and publish (for example v0.1.1). Leave empty to only test the builds."
+        required: false
+        default: ""
+
+permissions:
+  contents: read
+
+env:
+  # The tag being released: from the pushed tag, or from the input. Empty means "test run, publish nothing".
+  TAG: ${{ inputs.tag || (startsWith(github.ref, 'refs/tags/') && github.ref_name) || '' }}
+
+jobs:
+  check:
+    name: Check the tag and run the tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.tag || github.ref }}
+      - name: The tag matches the version in the code
+        if: ${{ env.TAG != '' }}
+        run: |
+          version=$(sed -n 's/^__version__ = "\(.*\)"/\1/p' src/heliograph/__init__.py)
+          [ "$TAG" = "v$version" ] || { echo "::error::Tag $TAG does not match __version__ $version"; exit 1; }
+          grep -q "^## \[$version\]" CHANGELOG.md || { echo "::error::CHANGELOG.md has no section for $version"; exit 1; }
+      - name: Test suite
+        run: python3 -X dev -m unittest discover -s tests -t tests
+
+  dist:
+    name: Wheel and source archive
+    needs: check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.tag || github.ref }}
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - run: python -m pip install build && python -m build
+      - uses: actions/upload-artifact@v7
+        with:
+          name: dist-python
+          path: dist/*
+          retention-days: 14
+
+  deb:
+    name: .deb (Debian, Ubuntu, Linux Mint, Pop!_OS)
+    needs: check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.tag || github.ref }}
+      - name: Build
+        run: |
+          export SOURCE_DATE_EPOCH=$(git log -1 --format=%ct)
+          python3 packaging/build_packages.py deb --out dist
+          dpkg-deb --info dist/*.deb
+          dpkg-deb --contents dist/*.deb
+      - uses: actions/upload-artifact@v7
+        with:
+          name: dist-deb
+          path: dist/*.deb
+          retention-days: 14
+
+  rpm:
+    name: .rpm (Fedora, openSUSE, other RPM-based)
+    needs: check
+    runs-on: ubuntu-latest
+    container: fedora:latest
+    steps:
+      - name: Tools
+        run: dnf -y install rpm-build python3 git tar gzip
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.tag || github.ref }}
+      - name: Build
+        run: |
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          export SOURCE_DATE_EPOCH=$(git log -1 --format=%ct)
+          python3 packaging/build_packages.py rpm --out dist
+          rpm -qpi dist/*.rpm
+          rpm -qpl dist/*.rpm
+          rpm -qpR dist/*.rpm
+      - uses: actions/upload-artifact@v7
+        with:
+          name: dist-rpm
+          path: dist/*.rpm
+          retention-days: 14
+
+  arch:
+    name: Arch package (Arch, CachyOS, Manjaro, EndeavourOS)
+    needs: check
+    runs-on: ubuntu-latest
+    container: archlinux:latest
+    steps:
+      - name: Tools
+        run: pacman -Syu --noconfirm --needed base-devel python git
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.tag || github.ref }}
+      - name: Build (makepkg refuses to run as root, so a build user does it)
+        run: |
+          useradd --create-home builder
+          chown -R builder:builder "$GITHUB_WORKSPACE"
+          su builder -c "cd '$GITHUB_WORKSPACE' && git config --global --add safe.directory '$GITHUB_WORKSPACE' && SOURCE_DATE_EPOCH=\$(git log -1 --format=%ct) python packaging/build_packages.py arch --out dist"
+          pacman -Qpi dist/*.pkg.tar.zst
+          pacman -Qpl dist/*.pkg.tar.zst
+      - uses: actions/upload-artifact@v7
+        with:
+          name: dist-arch
+          path: dist/*.pkg.tar.zst
+          retention-days: 14
+
+  release:
+    name: Attach the files to the GitHub release
+    needs: [dist, deb, rpm, arch]
+    if: ${{ inputs.tag != '' || startsWith(github.ref, 'refs/tags/') }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.tag || github.ref }}
+      - uses: actions/download-artifact@v8
+        with:
+          pattern: dist-*
+          merge-multiple: true
+          path: dist
+      - name: Checksums
+        run: python3 packaging/build_packages.py sums --out dist
+      - name: Create the release if it does not exist yet, then attach the files
+        run: |
+          if ! gh release view "$TAG" --repo "$GITHUB_REPOSITORY" > /dev/null 2>&1; then
+            version="${TAG#v}"
+            awk -v head="## [$version]" 'index($0, head) == 1 {f = 1; next} /^## \[/ {f = 0} f' CHANGELOG.md > notes.md
+            gh release create "$TAG" --repo "$GITHUB_REPOSITORY" --verify-tag --title "Heliograph $version" --notes-file notes.md
+          fi
+          gh release upload "$TAG" dist/* --repo "$GITHUB_REPOSITORY" --clobber
+          gh release view "$TAG" --repo "$GITHUB_REPOSITORY" --json assets --jq '.assets[].name'
+
+  pypi:
+    # Optional. Runs only when the repository variable PUBLISH_TO_PYPI is "true" (see docs/packaging.md, "PyPI").
+    name: Publish to PyPI
+    needs: release
+    if: ${{ vars.PUBLISH_TO_PYPI == 'true' }}
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          name: dist-python
+          path: dist
+      - uses: pypa/gh-action-pypi-publish@release/v1

@@ -18,7 +18,8 @@ class CliTest(IsolatedHome):
         return r
 
     def test_version(self):
-        self.assertIn("Heliograph 0.1.0", self.run_cli("--version").stdout)
+        from heliograph import __version__
+        self.assertIn(f"Heliograph {__version__}", self.run_cli("--version").stdout)
 
     def test_config_roundtrip_and_validation(self):
         out = self.run_cli("config").stdout

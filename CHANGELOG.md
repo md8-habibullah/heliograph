@@ -4,6 +4,21 @@ All notable changes are listed here. The format follows [Keep a Changelog](https
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-11-18
+
+### Added
+- Ready-made install files for the main Linux families, attached to every release: a `.deb` (Debian, Ubuntu, Linux Mint, Pop!_OS), an `.rpm` (Fedora, openSUSE and other RPM-based systems), an Arch package (Arch, CachyOS, Manjaro, EndeavourOS), the wheel and source archive, and a `SHA256SUMS` file. Each is one architecture-independent file that installs the program under `/usr/share/heliograph`, a `heliograph` command, a manual page (`man heliograph`), the app-menu entry, the icon and the AppStream metadata. No install or remove scripts, and nothing else on the system is touched.
+- `packaging/build_packages.py` (standard library only) builds all of them from one shared staging step, so the packages install exactly the same files. Recipes: `packaging/rpm/heliograph.spec` and `packaging/arch/PKGBUILD` (also usable for COPR and the AUR).
+- Release workflow (`.github/workflows/release.yml`): pushing a version tag builds every file, checks the tag against the version in the code, runs the tests, creates the release if needed and attaches the files. Can also be started by hand for an existing tag or as a build-only trial. Optional PyPI publishing behind a repository variable.
+- `docs/install.md` (one simple command per distribution) and `docs/packaging.md` (how the packages are built and what it takes to get into apt, dnf, pacman and other repositories).
+
+### Changed
+- The Arch recipe moved from `packaging/PKGBUILD` to `packaging/arch/PKGBUILD` and now installs through the shared staging step.
+
+### Fixed (found while testing the packages on real distributions)
+- On Pillow older than 9.1 (Ubuntu 22.04 ships 9.0.1) the fast Pillow thumbnail path failed on every picture and the error was swallowed, so the slower ImageMagick and FFmpeg paths were used instead. The filter constant is now looked up in a way that works on every Pillow.
+- The test suite no longer fails on a machine without Node.js: the interface syntax check skips itself (CI still runs it). This matters to distribution packagers, who run the tests when building.
+
 ## [0.1.0] - first public release
 
 ### Added

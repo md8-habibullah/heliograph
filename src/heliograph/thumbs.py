@@ -195,10 +195,16 @@ def _flatten(im):
     return im
 
 
+def _lanczos(image_module):
+    """The LANCZOS filter on any Pillow: Image.Resampling.LANCZOS (9.1 and newer) or Image.LANCZOS (older, such as
+    the 9.0.1 that Ubuntu 22.04 ships)."""
+    return getattr(image_module, "Resampling", image_module).LANCZOS
+
+
 def _jpeg_bytes(im, px, quality):
     from PIL import Image
     im = _flatten(im)
-    im.thumbnail((px, px), Image.Resampling.LANCZOS, reducing_gap=2.0)
+    im.thumbnail((px, px), _lanczos(Image), reducing_gap=2.0)
     out = io.BytesIO()
     im.save(out, "JPEG", quality=quality, optimize=False)
     return out.getvalue()

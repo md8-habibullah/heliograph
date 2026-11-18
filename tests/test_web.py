@@ -81,6 +81,7 @@ class WebAssetsTest(unittest.TestCase):
         self.assertIn(1, speeds)
         self.assertEqual(speeds, sorted(speeds))
 
+    @unittest.skipUnless(shutil.which("node"), "needs node (a syntax check only; CI runs it)")
     def test_scripts_parse(self):
         for f in JS:
             r = subprocess.run(["node", "--check", str(f)], capture_output=True, text=True)

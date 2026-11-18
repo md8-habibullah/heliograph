@@ -15,6 +15,7 @@ python3 -X dev -m unittest discover -s tests -t tests   # whole suite, about 12 
 make test                                                # same
 make check-web                                           # node --check on the interface scripts
 ./bin/heliograph --help                                  # run from the checkout, no install
+python3 packaging/build_packages.py stage --root /tmp/pkg-root   # what the .deb/.rpm/Arch packages install (see docs/packaging.md)
 HELIOGRAPH_HOME=$(mktemp -d) ./bin/heliograph ...        # ALWAYS use a scratch home when experimenting
 ```
 

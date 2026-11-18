@@ -5,7 +5,7 @@ thumbnails, FFmpeg for playback fallback and conversion) and a window drawn by a
 Chromium-based browser in app mode. No network access, no telemetry.
 """
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 APP_NAME = "Heliograph"
 APP_SLUG = "heliograph"
 APP_ID = "dev.habibullah.Heliograph"

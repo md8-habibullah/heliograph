@@ -30,7 +30,8 @@ src/heliograph/
   web/           index.html, style.css, core.js, grid.js, nav.js, player.js, dialogs.js, help.js, main.js, icon.svg
 tests/           unittest suite (helpers.py: IsolatedHome base class)
 tools/           synth_library.py (scale data), scale_probe.py (timings)
-packaging/       PKGBUILD, AppStream metainfo, desktop file
+packaging/       build_packages.py (.deb / .rpm / Arch builder, one shared `stage` step), rpm/heliograph.spec,
+                 arch/PKGBUILD, AppStream metainfo, desktop file, icon
 ```
 
 ## Data model (SQLite, `heliograph.db`, schema version 1)
@@ -77,6 +78,10 @@ Covering indexes `files_ord_folder` and `files_ord_date` match the two default s
 **Add a file format.** Add the extension to `formats.py` (+ `RAW_EXT`/`PIL_EXT`/`BMFF_EXT` if a special reader applies). If it needs a decoder, extend the chain in `thumbs.generate`. If the extension is ambiguous with non-media (like `ts`), add it to `AMBIGUOUS_EXT` and a content check. Update `docs/formats.md`. `tests/test_formats.py` guards the breadth.
 
 **Add a conversion preset.** Add to `convert.PRESETS` (id, label, description, input kinds, output kind, extension, muxer) and a command branch in `_image_cmds`/`_video_cmds`/`_audio_cmds`. `tests/test_convert.py::EveryPresetTest` runs every preset on a tiny real input, so yours is covered automatically. Update `docs/conversion.md` and `docs/mcp.md` counts.
+
+**Release a version.** Change the version in `src/heliograph/__init__.py`, `pyproject.toml`, `packaging/arch/PKGBUILD`, `packaging/rpm/heliograph.spec` (Version and the newest `%changelog` entry), the metainfo `<releases>` and `CHANGELOG.md`; `tests/test_packaging.py` fails if any of them disagree. A pushed `vX.Y.Z` tag runs `.github/workflows/release.yml`, which builds every package. Steps and the apt/dnf/pacman repository question: [../packaging.md](../packaging.md).
+
+**Change what a package installs.** Only `packaging/build_packages.py: stage()` decides that; the `.deb`, the `.rpm` and the Arch package all call it. If you add an installed file, also list it in `%files` of the spec (a test compares the two).
 
 **Add a setting.** Add it to `db.SETTINGS` (default, allowed values, description) and read it with `db.get_setting`. The API, `heliograph config` and validation pick it up. Document it in `docs/performance.md`.
 

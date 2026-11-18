@@ -1,0 +1,29 @@
+# Maintainer: MD. Habibullah Sharif <149287500+md8-habibullah@users.noreply.github.com>
+pkgname=heliograph
+pkgver=0.1.1
+pkgrel=1
+pkgdesc="A fast, private media library and player for Linux"
+arch=('any')
+url="https://github.com/md8-habibullah/heliograph"
+license=('MIT')
+depends=('python' 'ffmpeg' 'hicolor-icon-theme')
+optdepends=('chromium: window (any Chromium-based browser works: Brave, Chrome, Edge, Vivaldi)'
+            'python-pillow: faster picture headers and thumbnails'
+            'imagemagick: extra picture formats'
+            'libheif: HEIC pictures (heif-convert)'
+            'libraw: camera RAW pictures (dcraw_emu)'
+            'mpv: "Play with mpv" action'
+            'libva-utils: GPU video acceleration check')
+source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz")
+sha256sums=('SKIP')   # before submitting to the AUR run `updpkgsums` in this folder, after the tag exists
+
+check() {
+  cd "$pkgname-$pkgver"
+  python -m unittest discover -s tests -t tests
+}
+
+package() {
+  cd "$pkgname-$pkgver"
+  # One staging step shared with the .deb and .rpm, so every package installs the same files.
+  python packaging/build_packages.py stage --root "$pkgdir" --prefix /usr --docs arch
+}

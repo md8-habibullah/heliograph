@@ -45,6 +45,17 @@ Heliograph has **no required Python packages**.
 
 ## Install
 
+Pick your system. The files are on the [Releases page](https://github.com/md8-habibullah/heliograph/releases/latest) (`gh release download --repo md8-habibullah/heliograph --pattern '*.deb'` fetches one from a terminal). Each one installs the program, the `heliograph` command, an app-menu entry and the icon, and changes nothing else on your system.
+
+| Your system | File | Command |
+| --- | --- | --- |
+| Ubuntu, Debian, Linux Mint, Pop!_OS | `heliograph_<version>_all.deb` | `sudo apt install ./heliograph_*_all.deb` |
+| Fedora, openSUSE, other RPM-based | `heliograph-<version>-1.noarch.rpm` | `sudo dnf install ./heliograph-*.noarch.rpm` |
+| Arch, CachyOS, Manjaro, EndeavourOS | `heliograph-<version>-1-any.pkg.tar.zst` | `sudo pacman -U heliograph-*-any.pkg.tar.zst` |
+| Any other Linux with Python 3.10+ | | `pipx install "heliograph[image] @ git+https://github.com/md8-habibullah/heliograph.git"` |
+
+Checksums, codecs on Fedora, updating and removing: [docs/install.md](docs/install.md).
+
 From a source checkout (no installation needed):
 
 ```bash
@@ -53,16 +64,7 @@ cd heliograph
 ./bin/heliograph ~/Pictures
 ```
 
-As a command, with pipx:
-
-```bash
-pipx install "heliograph[image] @ git+https://github.com/md8-habibullah/heliograph.git"
-heliograph install          # adds Heliograph to the app menu and to "Open with"
-```
-
-On Arch Linux, a `PKGBUILD` is in [packaging/](packaging/).
-
-`heliograph install` only adds a launcher and an icon under `~/.local/share`. It never changes your default applications. Window behaviour on Wayland (Hyprland) is described in the [FAQ](docs/faq.md).
+With pipx, `heliograph install` adds Heliograph to the app menu and to "Open with" (the packages above already do that). It only adds a launcher and an icon under `~/.local/share` and never changes your default applications. Window behaviour on Wayland (Hyprland) is described in the [FAQ](docs/faq.md). How the packages are built, and what it takes to get into apt, dnf and pacman repositories: [docs/packaging.md](docs/packaging.md).
 
 ## Use it
 
@@ -144,7 +146,7 @@ Details: [SECURITY.md](SECURITY.md), [PRIVACY.md](PRIVACY.md).
 
 ## Status
 
-Version 0.1.0, alpha. It has been tested against a real 14,000-file folder and a synthetic million-file index, and its window and command-line flow were checked on Hyprland (Wayland) with Brave and Chromium; other desktops have not been tried. It is young: please read [docs/formats.md](docs/formats.md) for what is untested, and open an issue for anything that misbehaves.
+Version 0.1.1, alpha. It has been tested against a real 14,000-file folder and a synthetic million-file index, and its window and command-line flow were checked on Hyprland (Wayland) with Brave and Chromium; other desktops have not been tried. It is young: please read [docs/formats.md](docs/formats.md) for what is untested, and open an issue for anything that misbehaves.
 
 ## License
 
