@@ -22,7 +22,8 @@ A private folder (instead of the distribution's python site-packages) means one 
 release of a distribution, whatever its Python minor version is. The package needs `python3` 3.10 or newer;
 it never installs or changes anything else on the system, and it has no install or remove scripts.
 
-Set SOURCE_DATE_EPOCH (for example `git log -1 --format=%ct`) to make the files byte-for-byte repeatable.
+Set SOURCE_DATE_EPOCH (for example `git log -1 --format=%ct`) so the output does not depend on the build time
+(identical bytes on the same machine and tools; other environments give the same installed files).
 """
 
 import argparse

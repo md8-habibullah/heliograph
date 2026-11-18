@@ -91,4 +91,4 @@ The complete test suite (160 tests) was also run, as a normal user, on the oldes
 - Ubuntu's snap Chromium, Linux Mint, Pop!_OS, Zorin, Nobara, Manjaro, EndeavourOS and CachyOS themselves. They are built on the families above and should behave the same, but the packages were not installed on them.
 - The RPM Fusion codec swap on Fedora (the command is the one in Fedora's own guide).
 - Hardware video acceleration inside a package install.
-- The GitHub release workflow, which has never run on GitHub: the files above were built by the same script in clean containers, not by the workflow.
+- The files attached to the GitHub release were built by the release workflow, not by hand. Their installed contents were compared file by file with the files tested above and are identical (the Arch package differs only in build metadata), but the workflow's own files were not installed again on every distribution in the table.

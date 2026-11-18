@@ -43,7 +43,7 @@ docker run --rm -v "$PWD:/src:ro" -v "$PWD/dist:/out" ubuntu:22.04 bash -c \
   'apt-get update -qq && apt-get install -y -qq python3 && python3 /src/packaging/build_packages.py deb --out /out'
 ```
 
-The same file names appear in every build: `heliograph_<version>_all.deb`, `heliograph-<version>-1.noarch.rpm`, `heliograph-<version>-1-any.pkg.tar.zst`. Set `SOURCE_DATE_EPOCH` (for example `git log -1 --format=%ct`) and the files are byte-for-byte repeatable. Builds from a git checkout include new files that `.gitignore` does not exclude, so stage or ignore stray files first.
+The same file names appear in every build: `heliograph_<version>_all.deb`, `heliograph-<version>-1.noarch.rpm`, `heliograph-<version>-1-any.pkg.tar.zst`. Set `SOURCE_DATE_EPOCH` (for example `git log -1 --format=%ct`) and the output no longer depends on the time of the build. Rebuilding on the same machine with the same tools then gives identical bytes; a different build environment (another `xz`, `dpkg` or `makepkg` version, another file list) gives different bytes with the same installed files. The 0.1.1 files built by the release workflow and those built locally were compared file by file: the `.deb`, `.rpm`, wheel and source archive hold identical contents, and the Arch package differs only in its build metadata (build date, build path, packages present in the build container). Builds from a git checkout include new files that `.gitignore` does not exclude, so stage or ignore stray files first.
 
 ## Make a release
 
@@ -130,4 +130,4 @@ Not a good fit yet. Heliograph needs the whole file tree (a media library), FFmp
 
 ## What has and has not been tested
 
-See [install.md, "Tested on"](install.md#tested-on): each package type was built in a clean container of its own distribution, installed, run as a normal user and removed on Ubuntu, Debian, Fedora, openSUSE and Arch, and the whole test suite was run on the oldest and newest stacks. Not yet run: the release workflow on GitHub, and every route in the table above beyond the release files.
+See [install.md, "Tested on"](install.md#tested-on): each package type was built in a clean container of its own distribution, installed, run as a normal user and removed on Ubuntu, Debian, Fedora, openSUSE and Arch, and the whole test suite was run on the oldest and newest stacks. The release workflow ran on GitHub for the first time on the `v0.1.1` tag (2026-11-18) and passed; it built and attached all five files and `SHA256SUMS`, and their installed contents match the files tested above. Not yet done: every route in the table above beyond the release files.
